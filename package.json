@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "main": "electron/main.js",
-  "homepage": "./ ",
+  "homepage": ". ",
   "dependencies": {
     "cra-template": "1.2.0",
     "path-browserify": "^1.0.1",
@@ -18,7 +18,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "react-start": "BROWSER=none yarn start",
-    "electron-start": "ELECTRON_START_URL=http://localhost:3000 electron .",
+    "electron-start": "concurrently \"yarn react-start\" \"wait-on http://localhost:3000 && electron .\"",
     "electron-pack": "yarn build && electron-builder build -c.extraMetadata.main=build/Main.js"
   },
   "eslintConfig": {
@@ -40,7 +40,10 @@
     ]
   },
   "devDependencies": {
+    "concurrently": "^9.1.2",
     "electron": "^34.0.1",
-    "electron-builder": "^25.1.8"
+    "electron-builder": "^25.1.8",
+    "electron-reload": "^2.0.0-alpha.1",
+    "wait-on": "^8.0.2"
   }
 }
