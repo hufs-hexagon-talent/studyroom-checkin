@@ -5,10 +5,7 @@ import { HashRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import SnackbarProvider from "react-simple-snackbar";
 import "./index.css";
-
-import CheckIn from "./CheckIn";
-import NavigationBar from "./components/Navbar/NavigationBar";
-import Footer from "./components/footer/Footer";
+import Router from "./router";
 
 export const queryClient = new QueryClient();
 
@@ -18,9 +15,7 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <SnackbarProvider>
         <HashRouter>
-          <NavigationBar />
-          <CheckIn />
-          <Footer />
+          <Router />
         </HashRouter>
       </SnackbarProvider>
     </QueryClientProvider>
