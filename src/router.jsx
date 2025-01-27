@@ -21,13 +21,20 @@ const RouterComponent = () => {
       <NavigationBar />
       <div className="flex-grow">
         <Routes>
-          <Route path="/" element={<RoomPage />} />
-          {loggedIn && serviceRole === "RESIDENT" && (
+          {/* 로그인 상태에 따른 라우팅 */}
+          {loggedIn ? (
             <>
-              <Route path="/qrcheck" element={<CheckIn />} />
+              <Route path="/" element={<RoomPage />} />
+              {serviceRole === "RESIDENT" && (
+                <Route path="/qrcheck" element={<CheckIn />} />
+              )}
+            </>
+          ) : (
+            <>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="*" element={<Navigate to="/login" />} />
             </>
           )}
-          {!loggedIn && <Route path="/login" element={<LoginPage />} />}
         </Routes>
       </div>
       <Footer />

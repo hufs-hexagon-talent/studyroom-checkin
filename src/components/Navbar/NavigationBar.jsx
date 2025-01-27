@@ -27,11 +27,13 @@ const NavigationBar = () => {
         {/* 출석 체크용 아이디라면 */}
         {loggedIn && serviceRole === "RESIDENT" ? (
           <>
-            <Navbar.Link href="/qrcheck">출석 체크</Navbar.Link>
             {loggedIn ? (
-              <Navbar.Link href="/" onClick={logout}>
-                로그아웃
-              </Navbar.Link>
+              <>
+                <Navbar.Link href="/qrcheck">출석 체크</Navbar.Link>
+                <Navbar.Link href="/" onClick={logout}>
+                  로그아웃
+                </Navbar.Link>
+              </>
             ) : (
               <Navbar.Link href="/login">로그인</Navbar.Link>
             )}

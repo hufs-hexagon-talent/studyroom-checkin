@@ -1,9 +1,11 @@
 import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 import { authState } from "./authState";
 
 const useAuth = () => {
+  const navigate = useNavigate();
   const [auth, setAuth] = useRecoilState(authState);
 
   const isTokenValid = (token) => token !== "undefined" && token !== null;
@@ -32,7 +34,7 @@ const useAuth = () => {
           accessToken: access_token,
           refreshToken: refresh_token,
         });
-
+        navigate("/");
         return true;
       } catch (error) {
         throw new Error(
@@ -40,7 +42,7 @@ const useAuth = () => {
         );
       }
     },
-    [setAuth]
+    [setAuth, navigate]
   );
 
   const logout = useCallback(() => {
@@ -49,7 +51,7 @@ const useAuth = () => {
       accessToken: null,
       refreshToken: null,
     });
-    // navigate('/login'); // 리다이렉트가 필요하다면 사용
+    //navigate("/login"); // 리다이렉트가 필요하다면 사용
   }, [setAuth]);
 
   return { ...auth, loggedIn, login, logout };
