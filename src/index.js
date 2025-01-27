@@ -4,6 +4,7 @@ import { RecoilRoot } from "recoil";
 import { HashRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import SnackbarProvider from "react-simple-snackbar";
+import "./index.css";
 
 import CheckIn from "./CheckIn";
 import NavigationBar from "./components/Navbar/NavigationBar";
