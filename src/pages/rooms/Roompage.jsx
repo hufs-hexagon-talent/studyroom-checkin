@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import {
   Table,
@@ -14,7 +13,6 @@ import {
   addMinutes,
   format,
   parse,
-  isBefore,
   differenceInMinutes,
   areIntervalsOverlapping,
 } from "date-fns";
@@ -59,14 +57,6 @@ const createTimeTable = (config) => {
 };
 
 const RoomPage = () => {
-  // snackBar
-  const [openSnackbar, closeSnackbar] = useSnackbar({
-    position: "top-right",
-    style: {
-      backgroundColor: "#FF3333",
-    },
-  });
-
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedRangeFrom, setSelectedRangeFrom] = useState(null);
   const [selectedRangeTo, selSelectedRangeTo] = useState(null);
@@ -78,7 +68,7 @@ const RoomPage = () => {
   const [endHour, setEndHour] = useState(null);
   const [endMinute, setEndMinute] = useState(null);
   const [maxReservationMinute, setMaxReservationMinute] = useState(null);
-  const [departmentId, setDepartmentId] = useState(1);
+  const departmentId = 1;
   const today = new Date();
   //const { departmentId: urlDepartmentId } = useParams();
 
@@ -86,10 +76,6 @@ const RoomPage = () => {
   //   if (urlDepartmentId) return Number(urlDepartmentId);
   //   return domain == 1;
   // });
-
-  useEffect(() => {
-    console.log(departmentId);
-  }, []);
 
   // domain에 따라 departmentId 설정
   // useEffect(() => {
@@ -108,7 +94,6 @@ const RoomPage = () => {
     date: selectedDate,
     departmentId: departmentId,
   });
-  const { loggedIn: isLoggedIn } = useAuth();
 
   useEffect(() => {
     if (reservationsByRooms && reservationsByRooms.length > 0) {
@@ -177,15 +162,6 @@ const RoomPage = () => {
     setSelectedDate(formattedDate);
   };
 
-  const isRangeSelected =
-    selectedRangeFrom &&
-    selectedRangeTo &&
-    differenceInMinutes(selectedRangeTo, selectedRangeFrom) >
-      timeTableConfig.intervalMinute;
-
-  const isSomethingSelected =
-    selectedRoom && selectedRangeFrom && selectedRangeTo;
-
   // date-picker 설정
   registerLocale("ko", ko);
 
@@ -196,7 +172,7 @@ const RoomPage = () => {
       setAvailableDate(dates);
     };
     getDate(departmentId);
-  }, []);
+  }, [departmentId]);
 
   return (
     <>
@@ -368,7 +344,7 @@ const RoomPage = () => {
                           key={timeIndex}
                           className={isSelected ? "selected" : ""}
                           style={{
-                            opacity: !isRangeSelected && !isInSelectableRange,
+                            opacity: !isInSelectableRange,
                             backgroundColor: {
                               past: "#AAAAAA",
                               future: "#AAAAAA",

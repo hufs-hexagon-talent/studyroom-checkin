@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Navbar } from "flowbite-react";
 import Logo from "../../assets/logo.png";
 import useAuth from "../../hooks/useAuth";
 import { useServiceRole } from "../../api/user.api";
 
 const NavigationBar = () => {
+  const navigate = useNavigate();
   const { loggedIn, logout } = useAuth();
   const { data: serviceRole, refetch } = useServiceRole();
 
@@ -13,6 +15,8 @@ const NavigationBar = () => {
       refetch();
     }
   }, [loggedIn, refetch]);
+
+  console.log(serviceRole);
 
   return (
     <Navbar fluid rounded className="border-b-2">
@@ -24,33 +28,30 @@ const NavigationBar = () => {
       </Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse>
-        {/* 출석 체크용 아이디라면 */}
-        {loggedIn && serviceRole === "RESIDENT" ? (
+        {loggedIn ? (
           <>
-            {loggedIn ? (
-              <>
-                <Navbar.Link href="/qrcheck">출석 체크</Navbar.Link>
-                <Navbar.Link href="/" onClick={logout}>
-                  로그아웃
-                </Navbar.Link>
-              </>
-            ) : (
-              <Navbar.Link href="/login">로그인</Navbar.Link>
+            {serviceRole === "RESIDENT" && (
+              <Navbar.Link
+                className="cursor-pointer"
+                onClick={() => navigate("/qrcheck")}
+              >
+                출석 체크
+              </Navbar.Link>
             )}
+            {serviceRole === "ADMIN" && (
+              <Navbar.Link
+                className="cursor-pointer"
+                onClick={() => navigate("/qrcheck")}
+              >
+                출석 체크
+              </Navbar.Link>
+            )}
+            <Navbar.Link href="/" onClick={logout}>
+              로그아웃
+            </Navbar.Link>
           </>
         ) : (
-          <>
-            {loggedIn && serviceRole === "ADMIN" && (
-              <Navbar.Link href="/qrcheck">출석 체크</Navbar.Link>
-            )}
-            {loggedIn ? (
-              <Navbar.Link href="/" onClick={logout}>
-                로그아웃
-              </Navbar.Link>
-            ) : (
-              <Navbar.Link href="/login">로그인</Navbar.Link>
-            )}
-          </>
+          <Navbar.Link href="/login">로그인</Navbar.Link>
         )}
       </Navbar.Collapse>
     </Navbar>
