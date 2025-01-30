@@ -1,12 +1,32 @@
-import React, { useEffect } from "react";
-import { Navbar } from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import MenuIcon from "@mui/icons-material/Menu";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import Logo from "../../assets/logo.png";
 import useAuth from "../../hooks/useAuth";
 import { useServiceRole } from "../../api/user.api";
 
-const NavigationBar = () => {
+const drawerWidth = 240;
+
+function NavigationBar(props) {
+  const { window } = props;
+  const navigate = useNavigate();
   const { loggedIn, logout } = useAuth();
   const { data: serviceRole, refetch } = useServiceRole();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     if (loggedIn) {
@@ -14,45 +34,211 @@ const NavigationBar = () => {
     }
   }, [loggedIn, refetch]);
 
-  return (
-    <Navbar fluid rounded className="border-b-2">
-      <Navbar.Brand href="/">
-        <img src={Logo} className="mr-3 h-6 sm:h-9" alt="cse logo" />
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-          컴퓨터공학부 세미나실 예약 시스템
-        </span>
-      </Navbar.Brand>
-      <Navbar.Toggle />
-      <Navbar.Collapse>
-        {/* 출석 체크용 아이디라면 */}
-        {loggedIn && serviceRole === "RESIDENT" ? (
+  const handleDrawerToggle = () => {
+    setMobileOpen((prevState) => !prevState);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+      <Typography variant="h6" sx={{ my: 2 }}>
+        <img
+          src={Logo}
+          alt="cse logo"
+          className="h-10 mx-auto cursor-pointer"
+        />
+      </Typography>
+      <Divider />
+      <List>
+        {loggedIn ? (
           <>
-            <Navbar.Link href="/qrcheck">출석 체크</Navbar.Link>
-            {loggedIn ? (
-              <Navbar.Link href="/" onClick={logout}>
-                로그아웃
-              </Navbar.Link>
-            ) : (
-              <Navbar.Link href="/login">로그인</Navbar.Link>
+            {serviceRole === "RESIDENT" && (
+              <>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => navigate("/qrcheck")}>
+                    <ListItemText primary="출석 체크" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => navigate("/otp")}>
+                    <ListItemText primary="QR코드" />
+                  </ListItemButton>
+                </ListItem>
+              </>
             )}
+            {serviceRole === "ADMIN" && (
+              <>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => navigate("/qrcheck")}>
+                    <ListItemText primary="출석 체크" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => navigate("/otp")}>
+                    <ListItemText primary="QR코드" />
+                  </ListItemButton>
+                </ListItem>
+              </>
+            )}
+            <ListItem disablePadding>
+              <ListItemButton onClick={handleLogout}>
+                <ListItemText primary="로그아웃" />
+              </ListItemButton>
+            </ListItem>
           </>
         ) : (
-          <>
-            {loggedIn && serviceRole === "ADMIN" && (
-              <Navbar.Link href="/qrcheck">출석 체크</Navbar.Link>
-            )}
-            {loggedIn ? (
-              <Navbar.Link href="/" onClick={logout}>
-                로그아웃
-              </Navbar.Link>
-            ) : (
-              <Navbar.Link href="/login">로그인</Navbar.Link>
-            )}
-          </>
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => navigate("/login")}>
+              <ListItemText primary="로그인" />
+            </ListItemButton>
+          </ListItem>
         )}
-      </Navbar.Collapse>
-    </Navbar>
+      </List>
+    </Box>
   );
+
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
+
+  return (
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      {/* 상단 네비게이션 바 */}
+      <AppBar
+        component="nav"
+        position="fixed"
+        sx={{
+          backgroundColor: "white",
+          color: "black",
+          boxShadow: 0,
+          borderBottom: 0.5,
+          borderColor: "gray",
+        }}
+      >
+        <Toolbar>
+          {/* 모바일용 햄버거 버튼 */}
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: "none" } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          {/* 로고 */}
+          <Typography
+            variant="h6"
+            component="div"
+            onClick={() => navigate("/")}
+            sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}
+          >
+            <img
+              src={Logo}
+              alt="cse logo"
+              className="h-10 mr-2 cursor-pointer inline-block"
+              onClick={() => navigate("/")}
+            />
+            <span
+              onClick={() => navigate("/")}
+              className="text-xl font-semibold cursor-pointer inline-block"
+            >
+              컴퓨터공학부 세미나실 예약 시스템
+            </span>
+          </Typography>
+          {/* 데스크탑 메뉴 */}
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            {loggedIn ? (
+              <>
+                {serviceRole === "RESIDENT" && (
+                  <>
+                    <Button
+                      sx={{ fontSize: "1.1rem" }}
+                      color="inherit"
+                      onClick={() => navigate("/qrcheck")}
+                    >
+                      출석 체크
+                    </Button>
+                    <Button
+                      sx={{ fontSize: "1.1rem" }}
+                      color="inherit"
+                      onClick={() => navigate("/otp")}
+                    >
+                      QR코드
+                    </Button>
+                  </>
+                )}
+                {serviceRole === "ADMIN" && (
+                  <>
+                    <Button
+                      sx={{ fontSize: "1.1rem" }}
+                      color="inherit"
+                      onClick={() => navigate("/qrcheck")}
+                    >
+                      출석 체크
+                    </Button>
+                    <Button
+                      sx={{ fontSize: "1.1rem" }}
+                      color="inherit"
+                      onClick={() => navigate("/otp")}
+                    >
+                      QR코드
+                    </Button>
+                  </>
+                )}
+                <Button
+                  sx={{ fontSize: "1.1rem" }}
+                  color="inherit"
+                  onClick={handleLogout}
+                >
+                  로그아웃
+                </Button>
+              </>
+            ) : (
+              <Button
+                sx={{ fontSize: "1.1rem" }}
+                color="inherit"
+                onClick={() => navigate("/login")}
+              >
+                로그인
+              </Button>
+            )}
+          </Box>
+        </Toolbar>
+      </AppBar>
+      {/* 모바일 Drawer */}
+      <nav>
+        <Drawer
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{ keepMounted: true }}
+          sx={{
+            display: { xs: "block", sm: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </nav>
+      {/* 메인 페이지 여백 추가 */}
+      <Box component="main" sx={{ p: 3, mt: 8 }}>
+        <Toolbar />
+      </Box>
+    </Box>
+  );
+}
+
+NavigationBar.propTypes = {
+  window: PropTypes.func,
 };
 
 export default NavigationBar;
