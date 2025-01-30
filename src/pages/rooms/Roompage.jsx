@@ -9,19 +9,11 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import {
-  addMinutes,
-  format,
-  parse,
-  differenceInMinutes,
-  areIntervalsOverlapping,
-} from "date-fns";
+import { addMinutes, format, parse } from "date-fns";
 
 import useUrlQuery from "../../hooks/useUrlQuery";
-import useAuth from "../../hooks/useAuth";
 
 import { ko } from "date-fns/locale";
-import { useSnackbar } from "react-simple-snackbar";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -57,9 +49,6 @@ const createTimeTable = (config) => {
 };
 
 const RoomPage = () => {
-  const [selectedRoom, setSelectedRoom] = useState(null);
-  const [selectedRangeFrom, setSelectedRangeFrom] = useState(null);
-  const [selectedRangeTo, selSelectedRangeTo] = useState(null);
   const [availableDate, setAvailableDate] = useState([]);
   const [earliestStartTime, setEarliestStartTime] = useState(null);
   const [latestEndTime, setLatestEndTime] = useState(null);
@@ -179,7 +168,6 @@ const RoomPage = () => {
       <div id="container">
         <div id="head-container">
           <Typography
-            marginTop="50px"
             paddingBottom={6}
             variant="h5"
             fontWeight={450}
@@ -234,7 +222,7 @@ const RoomPage = () => {
                 overflowX: "scroll",
               },
               paddingLeft: "60px",
-              marginBottom: "30px",
+              marginBottom: "70px",
             }}
           >
             <Table>
@@ -291,20 +279,12 @@ const RoomPage = () => {
                         "yyyy-MM-dd HH:mm",
                         new Date()
                       );
-                      const slotDateTo = addMinutes(slotDateFrom, 30);
                       const slotDateFromPlus30 = addMinutes(slotDateFrom, 30);
                       const roomEndTime = reservationsByRoom.operationEndTime;
                       const isFuture =
                         format(slotDateFrom, "HH:mm") > roomEndTime &&
                         format(slotDateFrom, "HH:mm") <= latestEndTime;
                       const isPast = new Date() > slotDateFromPlus30;
-                      const isSelected =
-                        reservationsByRoom.partitionId ===
-                          selectedRoom?.partitionId &&
-                        areIntervalsOverlapping(
-                          { start: selectedRangeFrom, end: selectedRangeTo },
-                          { start: slotDateFrom, end: slotDateTo }
-                        );
                       const isReserved =
                         reservationsByRoom?.reservationTimeRanges.some(
                           (reservation) => {
@@ -321,30 +301,18 @@ const RoomPage = () => {
                           }
                         );
                       const isSelectable = !isPast && !isReserved && !isFuture;
-                      const isInSelectableRange =
-                        selectedRangeTo &&
-                        differenceInMinutes(slotDateTo, selectedRangeFrom) <=
-                          reservationsByRoom.eachMaxMinute &&
-                        differenceInMinutes(slotDateTo, selectedRangeFrom) >
-                          0 &&
-                        selectedRoom?.partitionId ===
-                          reservationsByRoom.partitionId;
-                      const mode = isSelected
-                        ? "selected"
-                        : isReserved
-                          ? "reserved"
-                          : isPast
-                            ? "past"
-                            : isFuture
-                              ? "future"
-                              : "none";
+                      const mode = isReserved
+                        ? "reserved"
+                        : isPast
+                          ? "past"
+                          : isFuture
+                            ? "future"
+                            : "none";
 
                       return (
                         <TableCell
                           key={timeIndex}
-                          className={isSelected ? "selected" : ""}
                           style={{
-                            opacity: !isInSelectableRange,
                             backgroundColor: {
                               past: "#AAAAAA",
                               future: "#AAAAAA",

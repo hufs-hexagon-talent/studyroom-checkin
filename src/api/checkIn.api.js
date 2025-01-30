@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "./client";
 
 // 체크인 하기
@@ -13,3 +13,16 @@ export const useCheckIn = () => {
     },
   });
 };
+
+// QR code 생성, OTP 제공
+export const fetchOtp = async () => {
+  const otp_response = await apiClient.post("/check-in/otp");
+  console.log("otp_response.data.data.verificationCode", otp_response.data);
+  return otp_response.data.data.verificationCode;
+};
+
+export const useOtp = () =>
+  useQuery({
+    queryKey: ["otp"],
+    queryFn: () => fetchOtp(),
+  });
