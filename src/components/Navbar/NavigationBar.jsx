@@ -63,11 +63,6 @@ function NavigationBar(props) {
                     <ListItemText primary="출석 체크" />
                   </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding>
-                  <ListItemButton onClick={() => navigate("/otp")}>
-                    <ListItemText primary="QR코드" />
-                  </ListItemButton>
-                </ListItem>
               </>
             )}
             {serviceRole === "ADMIN" && (
@@ -75,11 +70,6 @@ function NavigationBar(props) {
                 <ListItem disablePadding>
                   <ListItemButton onClick={() => navigate("/qrcheck")}>
                     <ListItemText primary="출석 체크" />
-                  </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                  <ListItemButton onClick={() => navigate("/otp")}>
-                    <ListItemText primary="QR코드" />
                   </ListItemButton>
                 </ListItem>
               </>
@@ -92,6 +82,9 @@ function NavigationBar(props) {
           </>
         ) : (
           <ListItem disablePadding>
+            <ListItemButton onClick={() => navigate("/")}>
+              <ListItemText primary="예약 현황" />
+            </ListItemButton>
             <ListItemButton onClick={() => navigate("/login")}>
               <ListItemText primary="로그인" />
             </ListItemButton>
@@ -103,7 +96,7 @@ function NavigationBar(props) {
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
-
+  console.log(serviceRole);
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -150,10 +143,10 @@ function NavigationBar(props) {
               컴퓨터공학부 세미나실 예약 시스템
             </span>
           </Typography>
-          {/* 데스크탑 메뉴 */}
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {loggedIn ? (
               <>
+                {/* 출석체크용 아이디일때 */}
                 {serviceRole === "RESIDENT" && (
                   <>
                     <Button
@@ -163,15 +156,9 @@ function NavigationBar(props) {
                     >
                       출석 체크
                     </Button>
-                    <Button
-                      sx={{ fontSize: "1.1rem" }}
-                      color="inherit"
-                      onClick={() => navigate("/otp")}
-                    >
-                      QR코드
-                    </Button>
                   </>
                 )}
+                {/* 관리자 아이디일 때 */}
                 {serviceRole === "ADMIN" && (
                   <>
                     <Button
@@ -180,13 +167,6 @@ function NavigationBar(props) {
                       onClick={() => navigate("/qrcheck")}
                     >
                       출석 체크
-                    </Button>
-                    <Button
-                      sx={{ fontSize: "1.1rem" }}
-                      color="inherit"
-                      onClick={() => navigate("/otp")}
-                    >
-                      QR코드
                     </Button>
                   </>
                 )}
@@ -199,13 +179,23 @@ function NavigationBar(props) {
                 </Button>
               </>
             ) : (
-              <Button
-                sx={{ fontSize: "1.1rem" }}
-                color="inherit"
-                onClick={() => navigate("/login")}
-              >
-                로그인
-              </Button>
+              // 로그아웃 상태일 때
+              <>
+                <Button
+                  sx={{ fontSize: "1.1rem" }}
+                  color="inherit"
+                  onClick={() => navigate("/")}
+                >
+                  예약 현황
+                </Button>
+                <Button
+                  sx={{ fontSize: "1.1rem" }}
+                  color="inherit"
+                  onClick={() => navigate("/login")}
+                >
+                  로그인
+                </Button>
+              </>
             )}
           </Box>
         </Toolbar>
@@ -230,7 +220,7 @@ function NavigationBar(props) {
         </Drawer>
       </nav>
       {/* 메인 페이지 여백 추가 */}
-      <Box component="main" sx={{ p: 3, mt: 8 }}>
+      <Box component="main" sx={{ p: 3, mt: 3 }}>
         <Toolbar />
       </Box>
     </Box>

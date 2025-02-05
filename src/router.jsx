@@ -9,7 +9,6 @@ import NavigationBar from "./components/Navbar/NavigationBar";
 import CheckIn from "./pages/checkin/CheckIn";
 import RoomPage from "./pages/rooms/Roompage";
 import LoginPage from "./pages/login/LoginPage";
-import Otp from "./pages/otp/Otp";
 
 const RouterComponent = () => {
   const { loggedIn } = useAuth();
@@ -27,24 +26,24 @@ const RouterComponent = () => {
               <Route path="/" element={<RoomPage />} />
               {serviceRole === "RESIDENT" && (
                 <>
-                  <Route path="/otp" element={<Otp />} />
                   <Route path="/qrcheck" element={<CheckIn />} />
                 </>
               )}
               {serviceRole === "ADMIN" && (
                 <>
-                  <Route path="/otp" element={<Otp />} />
+                  <Route path="/qrcheck" element={<CheckIn />} />
                   <Route path="/login" element={<LoginPage />} />
-                  <Route path="*" element={<Navigate to="/login" />} />
                 </>
               )}
             </>
           ) : (
             <>
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/" element={<RoomPage />} />
               <Route path="*" element={<Navigate to="/login" />} />
             </>
           )}
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
       <Footer />
