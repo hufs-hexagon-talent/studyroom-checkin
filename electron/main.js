@@ -13,7 +13,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(
         __dirname,
-        isDev ? "preload.js" : "../electron/preload.js"
+        isDev ? "preload.js" : path.join(app.getAppPath(), "preload.js")
       ),
       contextIsolation: true, // 보안 강화
       nodeIntegration: false, // 보안 강화 (preload에서만 필요한 노출 허용)
@@ -22,7 +22,7 @@ function createWindow() {
 
   const startUrl = isDev
     ? "http://localhost:3000"
-    : `file://${path.join(__dirname, "../build/index.html")}`;
+    : `file://${path.join(app.getAppPath(), "build/index.html")}`;
 
   mainWindow.loadURL(startUrl);
 

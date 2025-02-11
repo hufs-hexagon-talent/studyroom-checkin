@@ -31,7 +31,7 @@
   "build": {
     "appId": "com.hexagon.studyroom-checkin",
     "productName": "컴퓨터공학부 세미나실 출석확인 시스템",
-    "asar": true,
+    "asar": false,
     "mac": {
       "target": "dmg",
       "icon": "build/icon.icns"
