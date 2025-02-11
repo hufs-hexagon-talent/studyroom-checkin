@@ -1,9 +1,10 @@
 {
   "name": "studyroom-checkin-app",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "main": "electron/main.js",
   "homepage": ". ",
+  "description": "한국외국어대학교 컴퓨터공학부 세미나실 출석 서비스 앱",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -26,6 +27,32 @@
     "react-simple-snackbar": "^1.1.11",
     "recoil": "^0.7.7",
     "url": "^0.11.4"
+  },
+  "build": {
+    "appId": "com.hexagon.studyroom-checkin",
+    "productName": "컴퓨터공학부 세미나실 출석확인 시스템",
+    "asar": true,
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.icns"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "files": [
+      "build/**/*",
+      "electron/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "electron/preload.js",
+        "to": "electron/preload.js"
+      }
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
   },
   "scripts": {
     "start": "react-scripts start",

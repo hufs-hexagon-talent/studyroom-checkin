@@ -1,57 +1,52 @@
-const { app, BrowserWindow } = require("electron/main");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
 
-// 개발 환경에서만 electron-reload 활성화
-if (process.env.ELECTRON_START_URL) {
-  require("electron-reload")(path.join(__dirname, ".."), {
-    electron: path.join(
-      __dirname,
-      "..",
-      "node_modules",
-      ".bin",
-      "electron" // electron 실행 파일 경로
-    ),
-  });
-}
+const isDev = !app.isPackaged;
+let mainWindow;
 
 function createWindow() {
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+  mainWindow = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    title: "Study Room Check-in",
+    icon: path.join(__dirname, "../public/icon.icns"),
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"), // 필요 시 preload.js 설정
+      preload: path.join(
+        __dirname,
+        isDev ? "preload.js" : "../electron/preload.js"
+      ),
+      contextIsolation: true, // 보안 강화
+      nodeIntegration: false, // 보안 강화 (preload에서만 필요한 노출 허용)
     },
   });
 
-  win.webContents.on("did-finish-load", () => {
-    if (process.env.ELECTRON_START_URL) {
-      win.webContents.reloadIgnoringCache(); // Electron 창 강제 새로 고침
-    }
+  const startUrl = isDev
+    ? "http://localhost:3000"
+    : `file://${path.join(__dirname, "../build/index.html")}`;
+
+  mainWindow.loadURL(startUrl);
+
+  mainWindow.on("closed", () => {
+    mainWindow = null;
   });
-
-  // React 앱의 빌드 결과물을 로드
-  const startUrl = process.env.ELECTRON_START_URL || "http://localhost:3000";
-  win.loadURL(startUrl);
-  win.webContents.openDevTools();
-  // const startUrl =
-  //   process.env.ELECTRON_START_URL ||
-  //   `file://${path.join(__dirname, "../build/index.html")}`;
-
-  // win.loadURL(startUrl);
 }
 
-app.whenReady().then(() => {
-  createWindow();
-
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
-  });
-});
+app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
+});
+
+// 안전한 IPC 통신 처리
+ipcMain.handle("message-from-react", async (event, arg) => {
+  console.log("React에서 받은 메시지:", arg);
+  return "Electron에서 온 응답";
 });
