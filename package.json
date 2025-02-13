@@ -3,7 +3,7 @@
   "version": "0.1.1",
   "private": true,
   "main": "electron/main.js",
-  "homepage": ". ",
+  "homepage": "./",
   "description": "한국외국어대학교 컴퓨터공학부 세미나실 출석 서비스 앱",
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -46,8 +46,8 @@
     ],
     "extraResources": [
       {
-        "from": "electron/preload.js",
-        "to": "electron/preload.js"
+        "from": "src/main/preload.js",
+        "to": "src/main/preload.js"
       }
     ],
     "directories": {

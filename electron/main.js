@@ -3,6 +3,7 @@ const path = require("node:path");
 
 const isDev = !app.isPackaged;
 let mainWindow;
+const startUrl = `file://${path.join(app.getAppPath(), "build/index.html")}`;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -20,16 +21,14 @@ function createWindow() {
     },
   });
 
-  const startUrl = isDev
-    ? "http://localhost:3000"
-    : `file://${path.join(app.getAppPath(), "build/index.html")}`;
-
   mainWindow.loadURL(startUrl);
 
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
 }
+
+console.log(__dirname);
 
 app.whenReady().then(createWindow);
 

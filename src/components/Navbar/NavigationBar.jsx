@@ -96,7 +96,7 @@ function NavigationBar(props) {
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
-  console.log(serviceRole);
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
