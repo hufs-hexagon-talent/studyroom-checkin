@@ -9,8 +9,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
-    title: "Study Room Check-in",
-    icon: path.join(__dirname, "../public/icon.icns"),
+    title: "컴퓨터공학부 세미나실 출석 확인",
+    icon: path.join(__dirname, "../public/icon.ico"),
     webPreferences: {
       preload: path.join(
         __dirname,
