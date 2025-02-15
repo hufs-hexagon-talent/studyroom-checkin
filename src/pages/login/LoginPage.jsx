@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { Button, TextInput } from "flowbite-react";
 import { useSnackbar } from "react-simple-snackbar";
 import "./LoginPage.css";
-
 import useAuth from "../../hooks/useAuth";
 
 const LoginPage = () => {
@@ -14,7 +13,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const [openSuccessSnackbar] = useSnackbar({
-    position: "top-right",
+    position: "bottom-right",
     style: {
       backgroundColor: "#4CAF50", // 초록색
       color: "#FFFFFF",
@@ -22,7 +21,7 @@ const LoginPage = () => {
   });
 
   const [openErrorSnackbar] = useSnackbar({
-    position: "top-right",
+    position: "bottom-right",
     style: {
       backgroundColor: "#FF3333", // 빨간색
     },

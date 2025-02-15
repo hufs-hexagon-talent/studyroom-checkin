@@ -28,8 +28,6 @@ function createWindow() {
   });
 }
 
-console.log(__dirname);
-
 app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {

@@ -7,7 +7,7 @@ import "./Footer.css";
 
 const Footer = () => {
   const [openSnackbar, closeSnackbar] = useSnackbar({
-    position: "top-right",
+    position: "bottom-right",
     style: {
       backgroundColor: "#FF3333",
     },

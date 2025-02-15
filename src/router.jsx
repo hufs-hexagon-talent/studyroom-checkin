@@ -23,15 +23,17 @@ const RouterComponent = () => {
         <Routes>
           {loggedIn ? (
             <>
-              <Route path="/" element={<RoomPage />} />
+              <Route path="/" element={<CheckIn />} />
               {serviceRole === "RESIDENT" && (
                 <>
-                  <Route path="/qrcheck" element={<CheckIn />} />
+                  <Route path="/reservation" element={<RoomPage />} />
+                  <Route path="/" element={<CheckIn />} />
                 </>
               )}
               {serviceRole === "ADMIN" && (
                 <>
-                  <Route path="/qrcheck" element={<CheckIn />} />
+                  <Route path="/reservation" element={<RoomPage />} />
+                  <Route path="/" element={<CheckIn />} />
                   <Route path="/login" element={<LoginPage />} />
                 </>
               )}
@@ -39,7 +41,7 @@ const RouterComponent = () => {
           ) : (
             <>
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/" element={<RoomPage />} />
+              <Route path="/reservation" element={<RoomPage />} />
               <Route path="*" element={<Navigate to="/login" />} />
             </>
           )}

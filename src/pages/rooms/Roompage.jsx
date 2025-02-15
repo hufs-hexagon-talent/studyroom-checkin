@@ -173,6 +173,7 @@ const RoomPage = () => {
             fontWeight={450}
             component="div"
             align="center"
+            marginTop={6}
           >
             일자별 세미나실 예약 현황
           </Typography>

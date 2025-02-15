@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
@@ -25,14 +25,8 @@ function NavigationBar(props) {
   const { window } = props;
   const navigate = useNavigate();
   const { loggedIn, logout } = useAuth();
-  const { data: serviceRole, refetch } = useServiceRole();
+  const { data: serviceRole } = useServiceRole();
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    if (loggedIn) {
-      refetch();
-    }
-  }, [loggedIn, refetch]);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -40,7 +34,7 @@ function NavigationBar(props) {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate("/login");
   };
 
   const drawer = (
@@ -59,7 +53,7 @@ function NavigationBar(props) {
             {serviceRole === "RESIDENT" && (
               <>
                 <ListItem disablePadding>
-                  <ListItemButton onClick={() => navigate("/qrcheck")}>
+                  <ListItemButton onClick={() => navigate("/")}>
                     <ListItemText primary="출석 체크" />
                   </ListItemButton>
                 </ListItem>
@@ -68,7 +62,7 @@ function NavigationBar(props) {
             {serviceRole === "ADMIN" && (
               <>
                 <ListItem disablePadding>
-                  <ListItemButton onClick={() => navigate("/qrcheck")}>
+                  <ListItemButton onClick={() => navigate("/")}>
                     <ListItemText primary="출석 체크" />
                   </ListItemButton>
                 </ListItem>
@@ -82,7 +76,7 @@ function NavigationBar(props) {
           </>
         ) : (
           <ListItem disablePadding>
-            <ListItemButton onClick={() => navigate("/")}>
+            <ListItemButton onClick={() => navigate("/reservation")}>
               <ListItemText primary="예약 현황" />
             </ListItemButton>
             <ListItemButton onClick={() => navigate("/login")}>
@@ -152,9 +146,16 @@ function NavigationBar(props) {
                     <Button
                       sx={{ fontSize: "1.1rem" }}
                       color="inherit"
-                      onClick={() => navigate("/qrcheck")}
+                      onClick={() => navigate("/")}
                     >
                       출석 체크
+                    </Button>
+                    <Button
+                      sx={{ fontSize: "1.1rem" }}
+                      color="inherit"
+                      onClick={() => navigate("/reservation")}
+                    >
+                      예약 현황
                     </Button>
                   </>
                 )}
@@ -164,9 +165,16 @@ function NavigationBar(props) {
                     <Button
                       sx={{ fontSize: "1.1rem" }}
                       color="inherit"
-                      onClick={() => navigate("/qrcheck")}
+                      onClick={() => navigate("/")}
                     >
                       출석 체크
+                    </Button>
+                    <Button
+                      sx={{ fontSize: "1.1rem" }}
+                      color="inherit"
+                      onClick={() => navigate("/reservation")}
+                    >
+                      예약 현황
                     </Button>
                   </>
                 )}
@@ -184,7 +192,7 @@ function NavigationBar(props) {
                 <Button
                   sx={{ fontSize: "1.1rem" }}
                   color="inherit"
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate("/reservation")}
                 >
                   예약 현황
                 </Button>
@@ -220,7 +228,7 @@ function NavigationBar(props) {
         </Drawer>
       </nav>
       {/* 메인 페이지 여백 추가 */}
-      <Box component="main" sx={{ p: 3, mt: 3 }}>
+      <Box component="main" sx={{ mt: 3 }}>
         <Toolbar />
       </Box>
     </Box>

@@ -34,7 +34,7 @@ const useAuth = () => {
           accessToken: access_token,
           refreshToken: refresh_token,
         });
-        navigate("/");
+        //navigate("/");
         return true;
       } catch (error) {
         throw new Error(
@@ -42,7 +42,7 @@ const useAuth = () => {
         );
       }
     },
-    [setAuth, navigate]
+    [setAuth]
   );
 
   const logout = useCallback(() => {

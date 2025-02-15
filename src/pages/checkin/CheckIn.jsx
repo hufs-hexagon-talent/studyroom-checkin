@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import Inko from "inko";
 import { useCheckIn } from "../../api/checkIn.api";
 import { useRooms, useAllRooms } from "../../api/room.api";
-import { fetchServiceRole, useMyInfo } from "../../api/user.api";
+import { useMyInfo, useServiceRole } from "../../api/user.api";
 
 import { convertToEnglish } from "../../api/convertToEnglish";
 import { useNavigate } from "react-router-dom";
@@ -19,11 +19,13 @@ const QrCheck = () => {
 
   const { mutate: doCheckIn } = useCheckIn();
   const { data: me } = useMyInfo();
+  const { data: serviceRole } = useServiceRole();
   let inko = new Inko();
   const navigate = useNavigate();
-  const { loggedIn } = useAuth();
-  const [openSnackbar, closeSnackbar] = useSnackbar({
-    position: "top-right",
+  const { loggedIn, logout } = useAuth();
+
+  const [openErrorSnackbar, closeErrorSnackbar] = useSnackbar({
+    position: "bottom-right",
     style: {
       backgroundColor: "#FF3333",
     },
@@ -39,14 +41,14 @@ const QrCheck = () => {
         setroomId(2);
       } else {
         setroomId(null);
-        openSnackbar("유효하지 않은 사용자입니다");
+        //openErrorSnackbar("출석확인용 계정만 접속할 수 있습니다.");
         setTimeout(() => {
-          closeSnackbar();
+          closeErrorSnackbar();
         }, 2500);
         navigate("/");
       }
     }
-  }, [me, navigate, openSnackbar, closeSnackbar]);
+  }, [me, navigate, openErrorSnackbar, closeErrorSnackbar]);
 
   const roomsData = useAllRooms();
   const userRoomsData = useRooms(roomId ? [roomId] : []);
@@ -56,17 +58,23 @@ const QrCheck = () => {
 
   useEffect(() => {
     const checkAdminStatus = async () => {
-      // 관리자 인지 확인
       try {
-        const isAdmin = await fetchServiceRole();
-        if (!isAdmin) {
-          navigate("/");
+        if (serviceRole === "USER") {
+          await logout();
+          openErrorSnackbar(
+            "출석 확인용 계정 외의 개인 계정은 접속할 수 없습니다. 해당 호실의 계정으로 로그인 해주세요."
+          );
+
+          // 2초 후 로그인 페이지로 이동
+          setTimeout(() => {
+            navigate("/login");
+          }, 2000);
         }
       } catch (error) {
-        openSnackbar("관리자 외 접근 금지", error);
-        navigate("/");
+        openErrorSnackbar("관리자 외 접근 금지", error);
+        await logout();
         setTimeout(() => {
-          closeSnackbar();
+          closeErrorSnackbar();
         }, 2500);
         return;
       }
@@ -76,10 +84,17 @@ const QrCheck = () => {
     if (loggedIn) {
       checkAdminStatus();
     } else {
-      openSnackbar("로그인이 되어 있지 않습니다", 2500);
+      openErrorSnackbar("로그인이 되어 있지 않습니다", 2500);
       navigate("/login");
     }
-  }, [navigate, loggedIn, openSnackbar, closeSnackbar]);
+  }, [
+    navigate,
+    logout,
+    loggedIn,
+    openErrorSnackbar,
+    closeErrorSnackbar,
+    serviceRole,
+  ]);
 
   const handleQrCode = (verificationCode) => {
     if (isScanDisabled) return; // 스캔이 차단된 경우 함수 종료
