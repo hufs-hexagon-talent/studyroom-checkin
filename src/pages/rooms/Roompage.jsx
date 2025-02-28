@@ -59,20 +59,6 @@ const RoomPage = () => {
   const [maxReservationMinute, setMaxReservationMinute] = useState(null);
   const departmentId = 1;
   const today = new Date();
-  //const { departmentId: urlDepartmentId } = useParams();
-
-  // const [departmentId, setDepartmentId] = useState(() => {
-  //   if (urlDepartmentId) return Number(urlDepartmentId);
-  //   return domain == 1;
-  // });
-
-  // domain에 따라 departmentId 설정
-  // useEffect(() => {
-  //   if (!urlDepartmentId) {
-  //     setDepartmentId(domain === "ice" ? 2 : 1);
-  //   }
-  // }, [domain, urlDepartmentId]);
-
   const [selectedDate, setSelectedDate] = useUrlQuery(
     "date",
     format(new Date(), "yyyy-MM-dd"),

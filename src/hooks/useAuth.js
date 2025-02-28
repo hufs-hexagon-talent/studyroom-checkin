@@ -16,7 +16,7 @@ const useAuth = () => {
     async ({ id, password }) => {
       try {
         const response = await axios.post(
-          "https://api.studyroom-qa.alpaon.net/auth/login",
+          "https://api.studyroom.computer.hufs.ac.kr/auth/login",
           {
             username: id,
             password: password,
